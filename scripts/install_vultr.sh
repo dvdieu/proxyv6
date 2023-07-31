@@ -28,11 +28,11 @@ install_3proxy() {
 #    systemctl enable 3proxy
     echo "* hard nofile 999999" >>  /etc/security/limits.conf
     echo "* soft nofile 999999" >>  /etc/security/limits.conf
-    echo "net.ipv6.conf.enp1s0.proxy_ndp=1" >> /etc/sysctl.conf
-    echo "net.ipv6.conf.all.proxy_ndp=1" >> /etc/sysctl.conf
-    echo "net.ipv6.conf.default.forwarding=1" >> /etc/sysctl.conf
-    echo "net.ipv6.conf.all.forwarding=1" >> /etc/sysctl.conf
-    echo "net.ipv6.ip_nonlocal_bind = 1" >> /etc/sysctl.conf
+    # echo "net.ipv6.conf.enp1s0.proxy_ndp=1" >> /etc/sysctl.conf
+    # echo "net.ipv6.conf.all.proxy_ndp=1" >> /etc/sysctl.conf
+    # echo "net.ipv6.conf.default.forwarding=1" >> /etc/sysctl.conf
+    # echo "net.ipv6.conf.all.forwarding=1" >> /etc/sysctl.conf
+    # echo "net.ipv6.ip_nonlocal_bind = 1" >> /etc/sysctl.conf
     sysctl -p
     systemctl stop firewalld
     systemctl disable firewalld
@@ -55,11 +55,13 @@ setuid 65535
 stacksize 6291456 
 flush
 auth none
-allow *
+allow * 124.158.10.223
+deny *
 
 $(awk -F "/" '{print "auth none\n" \
-"allow * \n" \
+"allow * 124.158.10.223\n" \
 "proxy -6 -n -a -p" $4 " -i" $3 " -e"$5"\n" \
+"socks -6 -n -a -p" $4+10000 " -i" $3 " -e"$5"\n" \
 "flush\n"}' ${WORKDATA})
 EOF
 }
@@ -115,7 +117,7 @@ echo "Internal ip = ${IP4}. Exteranl sub for ip6 = ${IP6}"
 
 echo "How many proxy do you want to create? Example 500"	
 read COUNT	
-FIRST_PORT=20000
+FIRST_PORT=10000
 LAST_PORT=$(($FIRST_PORT + $COUNT))
 
 gen_data >$WORKDIR/data.txt

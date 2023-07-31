@@ -25,14 +25,8 @@ install_3proxy() {
     cp /3proxy/3proxy-0.9.4/scripts/3proxy.service2 /usr/lib/systemd/system/3proxy.service
     systemctl link /usr/lib/systemd/system/3proxy.service
     systemctl daemon-reload
-#    systemctl enable 3proxy
     echo "* hard nofile 999999" >>  /etc/security/limits.conf
     echo "* soft nofile 999999" >>  /etc/security/limits.conf
-    # echo "net.ipv6.conf.enp1s0.proxy_ndp=1" >> /etc/sysctl.conf
-    # echo "net.ipv6.conf.all.proxy_ndp=1" >> /etc/sysctl.conf
-    # echo "net.ipv6.conf.default.forwarding=1" >> /etc/sysctl.conf
-    # echo "net.ipv6.conf.all.forwarding=1" >> /etc/sysctl.conf
-    # echo "net.ipv6.ip_nonlocal_bind = 1" >> /etc/sysctl.conf
     sysctl -p
     systemctl stop firewalld
     systemctl disable firewalld
